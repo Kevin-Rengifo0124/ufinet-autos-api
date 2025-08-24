@@ -3,10 +3,10 @@ package com.ufinet.autos.autos_api.dto;
 import lombok.Data;
 
 @Data
-public class UserDto {
+public class SignupRequest {
 
-    private Long id;
-    private String name;
     private String email;
+    private String name;
+    private String password;
 
 }
