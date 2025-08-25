@@ -5,5 +5,11 @@ import { Login } from './auth/components/login/login';
 export const routes: Routes = [
   { path: 'register', component: Signup },
   { path: 'login', component: Login },
-  { path: '', redirectTo: '/login', pathMatch: 'full' } 
+  { 
+    path: 'dashboard', 
+    loadChildren: () => import('./modules/users/users-module').then(m => m.UsersModule),
+  },
+  
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' } // Cualquier ruta no encontrada va al login
 ];
