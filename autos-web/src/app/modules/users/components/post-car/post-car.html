@@ -1,1 +1,192 @@
-<p>post-car works!</p>
+<div style="margin-top: 50px">
+    <nz-spin [nzSpinning]="isSpinning" [nzSize]="'large'" nzTip="Procesando...">
+        <div class="parent">
+            <div class="child">
+                <div nz-row class="imgDiv">
+                    <h2>Publicar Vehículo</h2>
+                </div>
+
+                <form nz-form>
+                    <!-- Sección de carga de imagen -->
+                    <div nz-row>
+                        <div nz-col [nzMd]="24" [nzSm]="24" [nzXs]="24">
+                            <div class="profile-badge">
+                                <!-- Preview de imagen si está seleccionada -->
+                                <label for="upload_profile_image" class="upload-label"
+                                    *ngIf="selectedFile && imagePreview">
+                                    <img class="profile" [src]="imagePreview" alt="Preview del vehículo" />
+                                </label>
+
+                                <!-- Placeholder si no hay imagen -->
+                                <div class="image-placeholder" *ngIf="!selectedFile">
+                                    <i nz-icon nzType="plus" nzTheme="outline"
+                                        style="font-size: 48px; color: #bfbfbf;"></i>
+                                    <p>Seleccionar imagen del vehículo</p>
+                                </div>
+
+                                <!-- Input de archivo -->
+                                <input type="file" id="upload_profile_image"
+                                    accept="image/png,image/gif,image/jpeg,image/jpg" (change)="onFileSelected($event)"
+                                    style="margin-bottom: 15px;" />
+                            </div>
+                        </div>
+
+                        <!-- Campo Marca -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Marca</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor seleccione una marca!">
+                                    <nz-select id="brand" nzShowSearch nzAllowClear
+                                        nzPlaceholder="Seleccione una marca" [(ngModel)]="selectedBrand" name="brand">
+                                        <nz-option *ngFor="let brand of listOfBrands" [nzLabel]="brand"
+                                            [nzValue]="brand">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Nombre/Modelo -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Modelo</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor ingrese el modelo!">
+                                    <input nz-input id="carModel" placeholder="Ej: Corolla, Civic, Mustang"
+                                        [(ngModel)]="carModel" name="carModel" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Tipo -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Tipo</nz-form-label>
+                                <nz-form-control nzErrorTip="¡Por favor seleccione un tipo!">
+                                    <nz-select id="type" nzShowSearch nzAllowClear
+                                        nzPlaceholder="Seleccione el tipo de vehículo" [(ngModel)]="selectedType"
+                                        name="type">
+                                        <nz-option *ngFor="let type of listOfType" [nzLabel]="type" [nzValue]="type">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Transmisión -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Transmisión</nz-form-label>
+                                <nz-form-control nzErrorTip="¡Por favor seleccione una transmisión!">
+                                    <nz-select id="transmission" nzShowSearch nzAllowClear
+                                        nzPlaceholder="Seleccione el tipo de transmisión"
+                                        [(ngModel)]="selectedTransmission" name="transmission">
+                                        <nz-option *ngFor="let transmission of listOfTransmission"
+                                            [nzLabel]="transmission" [nzValue]="transmission">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Color -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Color</nz-form-label>
+                                <nz-form-control nzErrorTip="¡Por favor seleccione un color!">
+                                    <nz-select id="color" nzShowSearch nzAllowClear
+                                        nzPlaceholder="Seleccione el color" [(ngModel)]="selectedColor" name="color">
+                                        <nz-option *ngFor="let color of listOfColor" [nzLabel]="color"
+                                            [nzValue]="color">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Año -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Año</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor ingrese el año!">
+                                    <nz-input-number id="carYear" nzPlaceholder="Ej: 2020" [nzMin]="1990" [nzMax]="2025"
+                                        [(ngModel)]="carYear" name="carYear" style="width: 100%;">
+                                    </nz-input-number>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Precio -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Precio (USD)</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor ingrese el precio!">
+                                    <nz-input-number id="carPrice" 
+                                                    nzPlaceholder="Ej: 15000" 
+                                                    [nzMin]="1" 
+                                                    [nzStep]="100"
+                                                    [nzFormatter]="priceFormatter" 
+                                                    [nzParser]="priceParser" 
+                                                    [(ngModel)]="carPrice" 
+                                                    name="carPrice"
+                                                    style="width: 100%;">
+                                    </nz-input-number>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Kilometraje -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label>Kilometraje</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor ingrese el kilometraje!">
+                                    <nz-input-number id="carMileage" 
+                                                    nzPlaceholder="Ej: 50000" 
+                                                    [nzMin]="0"
+                                                    [nzStep]="1000" 
+                                                    [nzFormatter]="mileageFormatter" 
+                                                    [nzParser]="mileageParser"
+                                                    [(ngModel)]="carMileage" 
+                                                    name="carMileage" 
+                                                    style="width: 100%;">
+                                    </nz-input-number>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <!-- Campo Descripción -->
+                        <div nz-col nzSpan="24">
+                            <nz-form-item>
+                                <nz-form-label>Descripción</nz-form-label>
+                                <nz-form-control nzHasFeedback nzErrorTip="¡Por favor agregue una descripción!">
+                                    <textarea nz-input id="carDescription" rows="3"
+                                        placeholder="Describa las características, estado y detalles importantes del vehículo..."
+                                        [(ngModel)]="carDescription" name="carDescription" maxlength="500">
+                                    </textarea>
+                                    <div class="character-counter">
+                                        {{getDescriptionLength()}}/500 caracteres
+                                    </div>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div nz-row nzGutter="16">
+                        <div nz-col nzSpan="12">
+                            <button nz-button nzBlock nzSize="large" (click)="resetForm()">
+                                Limpiar
+                            </button>
+                        </div>
+                        <div nz-col nzSpan="12">
+                            <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="isSpinning"
+                                [disabled]="isSpinning || !isFormValid()" (click)="postCar()">
+                                <i nz-icon nzType="car" nzTheme="outline"></i>
+                                Publicar Vehículo
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nz-spin>
+</div>

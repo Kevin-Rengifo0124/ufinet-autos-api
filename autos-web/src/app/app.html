@@ -3,20 +3,21 @@
   <nz-header class="main-header custom-navbar">
     <div nz-row nzType="flex" nzJustify="space-between" nzAlign="middle">
       <div class="navbar-title">
-        <a routerLink="/">Ufinet Autos</a>
+        <!-- Cambio: redirige al dashboard si está logueado, sino al login -->
+        <a [routerLink]="isUserLoggedIn ? '/dashboard' : '/login'">Ufinet Autos</a>
       </div>
 
       <div class="nav-links">
         @if (isUserLoggedIn) {
-          <!-- Enlaces para usuario logueado -->
-          <a nz-button nzType="link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-          <a nz-button nzType="link" routerLink="/cars" routerLinkActive="active">Mis Autos</a>
-          <a nz-button nzType="link" routerLink="/profile" routerLinkActive="active">Perfil</a>
-          <a nz-button nzType="primary" (click)="logout()">Cerrar Sesión</a>
+        <!-- Enlaces para usuario logueado -->
+        <a nz-button nzType="link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <!-- Cambio: /cars por /dashboard/car -->
+        <a nz-button nzType="link" routerLink="/dashboard/car" routerLinkActive="active">Agregar Auto</a>
+        <a nz-button nzType="primary" (click)="logout()">Cerrar Sesión</a>
         } @else {
-          <!-- Enlaces para usuario no logueado -->
-          <a nz-button nzType="link" routerLink="/register" routerLinkActive="active">Registrarse</a>
-          <a nz-button nzType="primary" routerLink="/login" routerLinkActive="active">Login</a>
+        <!-- Enlaces para usuario no logueado -->
+        <a nz-button nzType="link" routerLink="/register" routerLinkActive="active">Registrarse</a>
+        <a nz-button nzType="primary" routerLink="/login" routerLinkActive="active">Login</a>
         }
       </div>
     </div>
