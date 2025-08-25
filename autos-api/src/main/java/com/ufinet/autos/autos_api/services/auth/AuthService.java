@@ -5,10 +5,9 @@ import com.ufinet.autos.autos_api.dto.UserDto;
 
 public interface AuthService {
 
-    UserDto createUser (SignupRequest signupRequest);
+    UserDto createUser(SignupRequest signupRequest);
 
     boolean hasUserWithEmail(String email);
-
 
 
 }

@@ -5,6 +5,7 @@ import com.ufinet.autos.autos_api.dto.UserDto;
 import com.ufinet.autos.autos_api.entity.User;
 import com.ufinet.autos.autos_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setName(signupRequest.getName());
         user.setEmail(signupRequest.getEmail());
-        user.setPassword(signupRequest.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(signupRequest.getPassword()));
         User createdUser = userRepository.save(user);
 
         UserDto userDto = new UserDto();
