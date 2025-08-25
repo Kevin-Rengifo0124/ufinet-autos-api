@@ -31,52 +31,65 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("=== JWT FILTER DEBUG ===");
+        System.out.println("Request URI: " + request.getRequestURI());
+        System.out.println("Request Method: " + request.getMethod());
+
         final String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization header: " + authHeader);
+
         final String jwt;
         final String userEmail;
 
-        // Verificar si el header es válido - CORREGIDO
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
+            System.out.println("No Bearer token found - continuing filter chain");
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extraer el JWT quitando "Bearer "
         jwt = authHeader.substring(7);
+        System.out.println("JWT token extracted: " + jwt.substring(0, Math.min(jwt.length(), 20)) + "...");
 
-        // Obtener email/username del token
-        userEmail = jwtUtil.extractUserName(jwt);
+        try {
+            userEmail = jwtUtil.extractUserName(jwt);
+            System.out.println("Extracted username: " + userEmail);
 
-        // Si tenemos un usuario y no está autenticado todavía
-        if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // CORREGIDO: Usar userDetailsService directamente
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                System.out.println("Loading user details for: " + userEmail);
 
-            // Validar el token con el usuario
-            if (jwtUtil.isTokenValid(jwt, userDetails)) {
-                // Crear un contexto vacío
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                System.out.println("User details loaded: " + userDetails.getUsername());
+                System.out.println("User authorities: " + userDetails.getAuthorities());
 
-                // Generar el token de autenticación
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                if (jwtUtil.isTokenValid(jwt, userDetails)) {
+                    System.out.println("Token is VALID - setting authentication");
 
-                // Asignar detalles adicionales de la request
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    context.setAuthentication(authToken);
+                    SecurityContextHolder.setContext(context);
 
-                // Insertar el token en el contexto
-                context.setAuthentication(authToken);
-
-                // Establecer el contexto en el SecurityContextHolder
-                SecurityContextHolder.setContext(context);
+                    System.out.println("Authentication set successfully");
+                } else {
+                    System.out.println("Token is INVALID");
+                }
+            } else {
+                System.out.println("User email empty or already authenticated");
             }
+        } catch (Exception e) {
+            System.out.println("ERROR in JWT processing: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        // Continuar con la cadena de filtros
+        System.out.println("Current authentication: " + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("=== END JWT FILTER DEBUG ===");
+
         filterChain.doFilter(request, response);
     }
 }

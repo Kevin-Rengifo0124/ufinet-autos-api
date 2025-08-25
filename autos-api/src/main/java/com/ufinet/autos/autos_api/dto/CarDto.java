@@ -24,9 +24,25 @@ public class CarDto {
 
     private Long price;
 
-    private Date year;
+    private String year;
 
     private MultipartFile image;
 
     private byte[] returnedImage;
+
+    @Override
+    public String toString() {
+        return "CarDto{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", color='" + color + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", transmission='" + transmission + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", year=" + year +
+                ", image=" + (image != null ? image.getOriginalFilename() : "null") +
+                '}';
+    }
 }
