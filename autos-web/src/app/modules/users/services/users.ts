@@ -13,13 +13,40 @@ export class Users {
   constructor(private http: HttpClient) { }
   
   postCar(carData: FormData): Observable<any> {
-    return this.http.post(BASIC_URL + "/cars", carData, {
-      headers: this.createAuthorizationHeader()
+    const headers = this.createAuthorizationHeader();
+    const token = StorageService.getToken();
+    
+    console.log('🔍 === SERVICIO USERS DEBUG ===');
+    console.log('🔑 Token enviado:', token);
+    console.log('📋 Headers:', headers.get('Authorization'));
+    console.log('📍 URL completa:', BASIC_URL + "/api/user/car");
+    
+    // Verificar FormData (solo para debug)
+    console.log('📦 FormData keys:');
+    for (let key of carData.keys()) {
+      const value = carData.get(key);
+      if (value instanceof File) {
+        console.log(`  - ${key}: File(${value.name}, ${value.size} bytes)`);
+      } else {
+        console.log(`  - ${key}:`, value);
+      }
+    }
+    
+    // ✅ CORREGIDO: URL correcta para tu backend
+    return this.http.post(BASIC_URL + "/api/user/car", carData, {
+      headers: headers
     });
   }
   
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
-    return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());
+    const token = StorageService.getToken();
+    
+    if (!token) {
+      console.error('❌ No hay token disponible para la autorización');
+      return authHeaders;
+    }
+    
+    return authHeaders.set('Authorization', 'Bearer ' + token);
   }
 }

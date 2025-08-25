@@ -11,7 +11,10 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+
+// Services
 import { Users } from '../../services/users';
+import { StorageService } from '../../../../auth/services/auth/storage/storage.service';
 
 @Component({
   selector: 'app-post-car',
@@ -130,45 +133,94 @@ export class PostCar {
     this.imagePreview = null;
   }
 
-  // Método para enviar el formulario
+  // ✅ MÉTODO CORREGIDO: Mapeo correcto de campos
   postCar(): void {
     if (!this.isFormValid()) {
       alert('Por favor complete todos los campos obligatorios');
       return;
     }
 
+    // 🔍 DEBUG: Verificar autenticación antes de enviar
+    console.log('🔍 === DEBUG AUTENTICACIÓN ===');
+    console.log('🔑 Token:', StorageService.getToken());
+    console.log('👤 Usuario:', StorageService.getUser());
+    console.log('✅ ¿Está logueado?:', StorageService.isUserLoggedIn());
+    
+    // Verificar que el token existe
+    const token = StorageService.getToken();
+    if (!token) {
+      alert('Error: No hay token de autenticación. Por favor inicia sesión nuevamente.');
+      return;
+    }
+
     this.isSpinning = true;
     
-    // Crear FormData para enviar imagen + datos
+    // ✅ CORREGIDO: FormData con campos que espera el backend
     const formData = new FormData();
-    formData.append('brand', this.selectedBrand);
-    formData.append('model', this.carModel);
-    formData.append('type', this.selectedType);
-    formData.append('transmission', this.selectedTransmission);
-    formData.append('color', this.selectedColor);
-    formData.append('year', this.carYear?.toString() || '');
-    formData.append('price', this.carPrice?.toString() || '');
-    formData.append('mileage', this.carMileage?.toString() || '0');
-    formData.append('description', this.carDescription);
     
+    // Mapear campos según CarDto del backend:
+    formData.append('brand', this.selectedBrand);                    // ✅ brand
+    formData.append('name', this.carModel);                          // ✅ name (no "model")
+    formData.append('type', this.selectedType);                      // ✅ type
+    formData.append('transmission', this.selectedTransmission);      // ✅ transmission
+    formData.append('color', this.selectedColor);                    // ✅ color
+    formData.append('description', this.carDescription);             // ✅ description
+    formData.append('price', this.carPrice?.toString() || '');       // ✅ price
+    
+    // ✅ CORREGIDO: Año como Date para el backend
+    if (this.carYear) {
+      // Crear fecha del 1 de enero del año seleccionado
+      const yearDate = new Date(this.carYear, 0, 1);
+      formData.append('year', yearDate.toISOString());
+    }
+    
+    // ✅ Imagen
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
     
-    console.log('Publicando vehículo...');
+    console.log('📋 FormData creado con campos correctos para el backend:');
+    for (let key of formData.keys()) {
+      const value = formData.get(key);
+      if (value instanceof File) {
+        console.log(`  - ${key}: File(${value.name}, ${value.size} bytes)`);
+      } else {
+        console.log(`  - ${key}:`, value);
+      }
+    }
     
     // Llamar al servicio Users
     this.userService.postCar(formData).subscribe({
       next: (response: any) => {
         this.isSpinning = false;
-        console.log('Vehículo publicado exitosamente:', response);
+        console.log('✅ Vehículo publicado exitosamente:', response);
         alert('¡Vehículo publicado exitosamente!');
         this.resetForm();
       },
       error: (error: any) => {
         this.isSpinning = false;
-        console.error('Error al publicar vehículo:', error);
-        alert('Error al publicar el vehículo. Intente nuevamente.');
+        console.error('❌ Error al publicar vehículo:', error);
+        
+        // 🔍 DEBUG: Información detallada del error
+        console.log('🔍 === DETALLE DEL ERROR ===');
+        console.log('Status:', error.status);
+        console.log('StatusText:', error.statusText);
+        console.log('URL:', error.url);
+        console.log('Message:', error.message);
+        console.log('Error body:', error.error);
+        
+        // Mensajes de error más específicos
+        if (error.status === 403) {
+          alert('❌ Error 403: Acceso denegado.\n\nPosibles causas:\n1. Token expirado\n2. Usuario no autorizado\n3. Configuración de CORS\n\n¡Intenta cerrar sesión y volver a iniciar sesión!');
+        } else if (error.status === 401) {
+          alert('❌ Error 401: No autenticado.\n\nPor favor inicia sesión nuevamente.');
+        } else if (error.status === 400) {
+          alert('❌ Error 400: Datos incorrectos.\n\nVerifica que todos los campos estén completos y la imagen sea válida.');
+        } else if (error.status === 0) {
+          alert('❌ Error de conexión.\n\nNo se puede conectar al servidor. Verifica que el backend esté ejecutándose en puerto 8080.');
+        } else {
+          alert(`❌ Error ${error.status}: ${error.statusText}\n\nIntenta nuevamente o contacta al administrador.`);
+        }
       }
     });
   }
