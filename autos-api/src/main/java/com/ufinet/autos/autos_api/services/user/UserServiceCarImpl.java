@@ -1,4 +1,4 @@
-package com.ufinet.autos.autos_api.services.admin;
+package com.ufinet.autos.autos_api.services.user;
 
 import com.ufinet.autos.autos_api.dto.CarDto;
 import com.ufinet.autos.autos_api.entity.Car;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService {
+public class UserServiceCarImpl implements UserServiceCar {
 
     private final CarRepository carRepository;
 
@@ -22,10 +22,10 @@ public class AdminServiceImpl implements AdminService {
             car.setBrand(carDto.getBrand());
             car.setColor(carDto.getColor());
             car.setPrice(carDto.getPrice());
-            car.setYear(carDto.getYear());
-            car.setType(carDto.getType());
             car.setDescription(carDto.getDescription());
+            car.setType(carDto.getType());
             car.setTransmission(carDto.getTransmission());
+            car.setYear(carDto.getYear());
             car.setImage(carDto.getImage().getBytes());
             carRepository.save(car);
             return true;

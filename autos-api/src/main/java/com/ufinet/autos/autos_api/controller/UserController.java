@@ -1,7 +1,7 @@
 package com.ufinet.autos.autos_api.controller;
 
 import com.ufinet.autos.autos_api.dto.CarDto;
-import com.ufinet.autos.autos_api.services.admin.AdminService;
+import com.ufinet.autos.autos_api.services.user.UserServiceCar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
-public class AdminController {
+public class UserController {
 
-    private final AdminService adminService;
+    private final UserServiceCar userServiceCar;
 
     @PostMapping("/car")
     public ResponseEntity<?> postCar(@ModelAttribute CarDto carDto) throws IOException {
-        boolean success = adminService.postCar(carDto);
+        boolean success = userServiceCar.postCar(carDto);
         if (success){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
