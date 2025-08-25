@@ -9,6 +9,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { Users } from '../../services/users';
+
 @Component({
   selector: 'app-users-dashboard',
   imports: [
@@ -22,6 +24,24 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
   templateUrl: './users-dashboard.html',
   styleUrl: './users-dashboard.scss'
 })
-export class UsersDashboard {
+export class UsersDashboard implements OnInit {
+
+  cars: any[] = []; 
+
+  constructor(private userService: Users) { }
+
+  ngOnInit() {
+    this.getAllCars();
+  }
+
+  getAllCars() {
+    this.userService.getAllCars().subscribe((res: any[]) => {
+      console.log(res);
+      res.forEach((element: any) => {
+        element.proccessedImage = 'data:image/jpeg;base64,' + element.returnedImage.data;
+        this.cars.push(element); 
+      });
+    })
+  }
 
 }

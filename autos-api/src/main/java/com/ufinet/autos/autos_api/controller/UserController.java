@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -30,7 +27,7 @@ public class UserController {
             boolean success = userServiceCar.postCar(carDto);
             System.out.println("Service execution result: " + success);
 
-            if (success){
+            if (success) {
                 System.out.println("Returning CREATED status");
                 return ResponseEntity.status(HttpStatus.CREATED).build();
             } else {
@@ -42,6 +39,11 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/cars")
+    public ResponseEntity<?> getAllCars() {
+        return ResponseEntity.ok(userServiceCar.getAllCars());
     }
 
 }

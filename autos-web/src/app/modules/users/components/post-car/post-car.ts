@@ -133,18 +133,16 @@ export class PostCar {
     this.imagePreview = null;
   }
 
-  // ✅ MÉTODO CORREGIDO: Mapeo correcto de campos
   postCar(): void {
     if (!this.isFormValid()) {
       alert('Por favor complete todos los campos obligatorios');
       return;
     }
 
-    // 🔍 DEBUG: Verificar autenticación antes de enviar
-    console.log('🔍 === DEBUG AUTENTICACIÓN ===');
-    console.log('🔑 Token:', StorageService.getToken());
-    console.log('👤 Usuario:', StorageService.getUser());
-    console.log('✅ ¿Está logueado?:', StorageService.isUserLoggedIn());
+    console.log('=== DEBUG AUTENTICACIÓN ===');
+    console.log('Token:', StorageService.getToken());
+    console.log('Usuario:', StorageService.getUser());
+    console.log('¿Está logueado?:', StorageService.isUserLoggedIn());
     
     // Verificar que el token existe
     const token = StorageService.getToken();
@@ -155,7 +153,6 @@ export class PostCar {
 
     this.isSpinning = true;
     
-    // ✅ CORREGIDO: FormData con campos que espera el backend
     const formData = new FormData();
     
     // Mapear campos según CarDto del backend:
@@ -167,19 +164,18 @@ export class PostCar {
     formData.append('description', this.carDescription);             // ✅ description
     formData.append('price', this.carPrice?.toString() || '');       // ✅ price
     
-    // ✅ CORREGIDO: Año como Date para el backend
     if (this.carYear) {
       // Crear fecha del 1 de enero del año seleccionado
       const yearDate = new Date(this.carYear, 0, 1);
       formData.append('year', yearDate.toISOString());
     }
     
-    // ✅ Imagen
+    // Imagen
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
     
-    console.log('📋 FormData creado con campos correctos para el backend:');
+    console.log('FormData creado con campos correctos para el backend:');
     for (let key of formData.keys()) {
       const value = formData.get(key);
       if (value instanceof File) {
@@ -193,13 +189,13 @@ export class PostCar {
     this.userService.postCar(formData).subscribe({
       next: (response: any) => {
         this.isSpinning = false;
-        console.log('✅ Vehículo publicado exitosamente:', response);
+        console.log('Vehículo publicado exitosamente:', response);
         alert('¡Vehículo publicado exitosamente!');
         this.resetForm();
       },
       error: (error: any) => {
         this.isSpinning = false;
-        console.error('❌ Error al publicar vehículo:', error);
+        console.error('Error al publicar vehículo:', error);
         
         // 🔍 DEBUG: Información detallada del error
         console.log('🔍 === DETALLE DEL ERROR ===');
@@ -211,15 +207,15 @@ export class PostCar {
         
         // Mensajes de error más específicos
         if (error.status === 403) {
-          alert('❌ Error 403: Acceso denegado.\n\nPosibles causas:\n1. Token expirado\n2. Usuario no autorizado\n3. Configuración de CORS\n\n¡Intenta cerrar sesión y volver a iniciar sesión!');
+          alert('Error 403: Acceso denegado.\n\nPosibles causas:\n1. Token expirado\n2. Usuario no autorizado\n3. Configuración de CORS\n\n¡Intenta cerrar sesión y volver a iniciar sesión!');
         } else if (error.status === 401) {
-          alert('❌ Error 401: No autenticado.\n\nPor favor inicia sesión nuevamente.');
+          alert('Error 401: No autenticado.\n\nPor favor inicia sesión nuevamente.');
         } else if (error.status === 400) {
-          alert('❌ Error 400: Datos incorrectos.\n\nVerifica que todos los campos estén completos y la imagen sea válida.');
+          alert('Error 400: Datos incorrectos.\n\nVerifica que todos los campos estén completos y la imagen sea válida.');
         } else if (error.status === 0) {
-          alert('❌ Error de conexión.\n\nNo se puede conectar al servidor. Verifica que el backend esté ejecutándose en puerto 8080.');
+          alert('Error de conexión.\n\nNo se puede conectar al servidor. Verifica que el backend esté ejecutándose en puerto 8080.');
         } else {
-          alert(`❌ Error ${error.status}: ${error.statusText}\n\nIntenta nuevamente o contacta al administrador.`);
+          alert(`Error ${error.status}: ${error.statusText}\n\nIntenta nuevamente o contacta al administrador.`);
         }
       }
     });

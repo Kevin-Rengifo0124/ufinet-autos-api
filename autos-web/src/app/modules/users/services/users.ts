@@ -17,12 +17,11 @@ export class Users {
     const token = StorageService.getToken();
     
     console.log('🔍 === SERVICIO USERS DEBUG ===');
-    console.log('🔑 Token enviado:', token);
-    console.log('📋 Headers:', headers.get('Authorization'));
-    console.log('📍 URL completa:', BASIC_URL + "/api/user/car");
+    console.log('Token enviado:', token);
+    console.log('Headers:', headers.get('Authorization'));
+    console.log(' URL completa:', BASIC_URL + "/api/user/car");
     
-    // Verificar FormData (solo para debug)
-    console.log('📦 FormData keys:');
+    console.log('FormData keys:');
     for (let key of carData.keys()) {
       const value = carData.get(key);
       if (value instanceof File) {
@@ -32,21 +31,28 @@ export class Users {
       }
     }
     
-    // ✅ CORREGIDO: URL correcta para tu backend
     return this.http.post(BASIC_URL + "/api/user/car", carData, {
       headers: headers
     });
   }
   
+  getAllCars(): Observable<any> {
+    return this.http.get(BASIC_URL + "/api/user/cars",{
+      headers: this.createAuthorizationHeader()
+    });
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     const token = StorageService.getToken();
     
     if (!token) {
-      console.error('❌ No hay token disponible para la autorización');
+      console.error('No hay token disponible para la autorización');
       return authHeaders;
     }
     
     return authHeaders.set('Authorization', 'Bearer ' + token);
   }
+
+
 }
