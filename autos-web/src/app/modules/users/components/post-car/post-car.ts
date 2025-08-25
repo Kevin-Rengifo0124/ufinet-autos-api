@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 
 // NG-Zorro imports necesarios para el template
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -11,6 +11,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { Users } from '../../services/users';
 
 @Component({
   selector: 'app-post-car',
@@ -70,7 +71,7 @@ export class PostCar {
     'Beige', 'Marrón', 'Dorado'
   ];
 
-  constructor() {}
+  constructor(private fb: FormBuilder, private userService: Users) {}
 
   // Formatters para los input-number
   priceFormatter = (value: number): string => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -138,27 +139,37 @@ export class PostCar {
 
     this.isSpinning = true;
     
-    // Crear objeto con los datos del auto
-    const carData = {
-      brand: this.selectedBrand,
-      model: this.carModel,
-      type: this.selectedType,
-      transmission: this.selectedTransmission,
-      color: this.selectedColor,
-      year: this.carYear,
-      price: this.carPrice,
-      mileage: this.carMileage,
-      description: this.carDescription,
-      image: this.selectedFile
-    };
+    // Crear FormData para enviar imagen + datos
+    const formData = new FormData();
+    formData.append('brand', this.selectedBrand);
+    formData.append('model', this.carModel);
+    formData.append('type', this.selectedType);
+    formData.append('transmission', this.selectedTransmission);
+    formData.append('color', this.selectedColor);
+    formData.append('year', this.carYear?.toString() || '');
+    formData.append('price', this.carPrice?.toString() || '');
+    formData.append('mileage', this.carMileage?.toString() || '0');
+    formData.append('description', this.carDescription);
     
-    console.log('Publicando vehículo...', carData);
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
     
-    // Simular llamada al API
-    setTimeout(() => {
-      this.isSpinning = false;
-      alert('¡Vehículo publicado exitosamente!');
-      this.resetForm();
-    }, 2000);
+    console.log('Publicando vehículo...');
+    
+    // Llamar al servicio Users
+    this.userService.postCar(formData).subscribe({
+      next: (response: any) => {
+        this.isSpinning = false;
+        console.log('Vehículo publicado exitosamente:', response);
+        alert('¡Vehículo publicado exitosamente!');
+        this.resetForm();
+      },
+      error: (error: any) => {
+        this.isSpinning = false;
+        console.error('Error al publicar vehículo:', error);
+        alert('Error al publicar el vehículo. Intente nuevamente.');
+      }
+    });
   }
 }
