@@ -1,1 +1,43 @@
-<p>login works!</p>
+<!-- login.html -->
+
+<div class="bg" style="background-color: #F8F8F8;">
+    <!-- Spinner de carga -->
+    <nz-spin [nzSpinning]="isSpinning" [nzSize]="'large'" nzTip="Cargando...">
+
+        <div class="parent">
+            <div class="child">
+                <div nz-row class="imgDiv">
+                    <div nz-col nzSpan="24">
+                        <h1>Iniciar Sesión</h1>
+                    </div>
+                </div>
+
+                <!-- Formulario -->
+                <form nz-form [formGroup]="loginForm">
+                    <!-- Email -->
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Por favor ingrese su correo electrónico">
+                            <nz-input-group nzPrefixIcon="user">
+                                <input type="text" nz-input placeholder="Correo electrónico" formControlName="email" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <!-- Password -->
+                    <nz-form-item>
+                        <nz-form-control nzErrorTip="Por favor ingrese su contraseña">
+                            <nz-input-group nzPrefixIcon="lock">
+                                <input type="password" nz-input placeholder="Contraseña" formControlName="password" />
+                            </nz-input-group>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" (click)="login()" [disabled]="loginForm.invalid">
+                        Ingresar
+                    </button>
+                    o <a routerLink="/register">¡Regístrate ahora!</a>
+                </form>
+            </div>
+        </div>
+    </nz-spin>
+</div>

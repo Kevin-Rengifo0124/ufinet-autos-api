@@ -5,5 +5,5 @@ import { Login } from './auth/components/login/login';
 export const routes: Routes = [
   { path: 'register', component: Signup },
   { path: 'login', component: Login },
-  { path: '', redirectTo: '/login', pathMatch: 'full' } // opcional
+  { path: '', redirectTo: '/login', pathMatch: 'full' } 
 ];
