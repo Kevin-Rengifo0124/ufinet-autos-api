@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Auth } from '../../services/auth/auth';
 
 // NG-Zorro módulos
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -33,7 +34,7 @@ export class Login {
   isSpinning = false;
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private authService: Auth) { }
 
   ngOnInit(): void { 
     this.loginForm = this.fb.group({
@@ -45,6 +46,9 @@ export class Login {
   login() {
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
+      this.authService.login(this.loginForm.value).subscribe((res) => {
+        console.log(res);
+      });
     } else {
       Object.values(this.loginForm.controls).forEach(control => {
         if (control.invalid) {

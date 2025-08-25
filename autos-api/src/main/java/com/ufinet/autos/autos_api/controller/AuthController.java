@@ -63,10 +63,8 @@ public class AuthController {
             throw new BadCredentialsException("Usuario incorrecto o clave incorrecta.");
         }
 
-        // Usar getEmail() de forma consistente
         final UserDetails userDetails = userService.userDetailsService().loadUserByUsername(authenticationRequest.getEmail());
 
-        // Usar tu entidad User personalizada en lugar de la de Spring Security
         Optional<User> optionalUser = userRepository.findFirstByEmail(authenticationRequest.getEmail());
 
         final String jwt = jwtUtil.generateToken(userDetails);
