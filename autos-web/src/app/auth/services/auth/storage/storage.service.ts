@@ -16,14 +16,14 @@ export class StorageService {
 
     static saveUser(user: any): void {
         window.localStorage.removeItem(USER);
-        window.localStorage.setItem(TOKEN, JSON.stringify(user));
+        window.localStorage.setItem(USER, JSON.stringify(user)); 
     }
 
-    static getToken() {
+    static getToken(): string | null {
         return window.localStorage.getItem(TOKEN);
     }
 
-    static getUser() {
+    static getUser(): any {
         const user = window.localStorage.getItem(USER);
         if (user) {
             return JSON.parse(user);
@@ -31,5 +31,15 @@ export class StorageService {
         return null;
     }
 
+    static isUserLoggedIn(): boolean {
+        const token = this.getToken();
+        const user = this.getUser();
+        
+        return !!(token && user);
+    }
 
+    static logout(): void {
+        window.localStorage.removeItem(TOKEN);
+        window.localStorage.removeItem(USER);
+    }
 }

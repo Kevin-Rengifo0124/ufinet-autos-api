@@ -1,15 +1,26 @@
+<!-- Versión mejorada usando @if (Angular 17+) -->
 <div>
   <nz-header class="main-header custom-navbar">
     <div nz-row nzType="flex" nzJustify="space-between" nzAlign="middle">
       <div class="navbar-title">
-        <a routerLink="/login">Ufinet Autos</a>
+        <a routerLink="/">Ufinet Autos</a>
       </div>
 
       <div class="nav-links">
-        <a nz-button nzType="link" routerLink="/register" routerLinkActive="active">Registrarse</a>
-        <a nz-button nzType="link" routerLink="/login" routerLinkActive="active">Login</a>
+        @if (isUserLoggedIn) {
+          <!-- Enlaces para usuario logueado -->
+          <a nz-button nzType="link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          <a nz-button nzType="link" routerLink="/cars" routerLinkActive="active">Mis Autos</a>
+          <a nz-button nzType="link" routerLink="/profile" routerLinkActive="active">Perfil</a>
+          <a nz-button nzType="primary" (click)="logout()">Cerrar Sesión</a>
+        } @else {
+          <!-- Enlaces para usuario no logueado -->
+          <a nz-button nzType="link" routerLink="/register" routerLinkActive="active">Registrarse</a>
+          <a nz-button nzType="primary" routerLink="/login" routerLinkActive="active">Login</a>
+        }
       </div>
     </div>
   </nz-header>
 </div>
+
 <router-outlet></router-outlet>
