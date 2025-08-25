@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { Auth } from '../../services/auth/auth';
 
 // NG ZORRO IMPORTS
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -15,7 +16,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule, // ← IMPORTANTE: FormsModule para template-driven forms
+    FormsModule,
     RouterLink,
     NzSpinModule,
     NzFormModule,
@@ -28,8 +29,12 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 })
 export class Signup {
   isSpinning = false;
-  
-  // Modelo para template-driven forms (coincide con tu HTML)
+
+  constructor(
+    private authService: Auth,
+    private router: Router
+  ) { }
+
   formModel = {
     email: '',
     password: '',
@@ -54,16 +59,33 @@ export class Signup {
     }
 
     // Si todo está correcto, proceder con el registro
-    this.isSpinning = true;
     this.register();
-    
-    setTimeout(() => {
-      this.isSpinning = false;
-      console.log('Registration successful!');
-    }, 2000);
+
   }
 
   register() {
     console.log('Form Data:', this.formModel);
+    const signupRequest = {
+      email: this.formModel.email,
+      password: this.formModel.password,
+      name: this.formModel.username
+    };
+
+    // Llamar al servicio de registro
+    this.authService.register(signupRequest).subscribe({
+      next: (response) => {
+        this.isSpinning = false;
+        console.log('Registration successful!', response);
+        alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+
+        // Redireccionar al login después del registro exitoso
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.isSpinning = false;
+        console.error('Registration failed:', error);
+        alert('Error en el registro. Por favor inténtalo de nuevo.');
+      }
+    });
   }
 }
