@@ -9,12 +9,31 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
 
+// NG ZORRO IMPORTS
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes), provideNzI18n(en_US), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient()
+    provideRouter(routes), 
+    provideNzI18n(en_US), 
+    importProvidersFrom(
+      FormsModule,
+      // NG-ZORRO Modules
+      NzSpinModule,
+      NzFormModule,
+      NzButtonModule,
+      NzInputModule,
+      NzLayoutModule
+    ), 
+    provideAnimationsAsync(), 
+    provideHttpClient()
   ]
 };

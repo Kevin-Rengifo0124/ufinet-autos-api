@@ -1,0 +1,49 @@
+.main-header {
+  background-color: #001529;
+  height: 64px;
+  line-height: 64px;
+  padding: 0 24px;
+  
+  // Usar flexbox para alinear elementos
+  .ant-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .navbar-title {
+    flex: 0 0 auto; // No crece ni se encoge
+    
+    a {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      
+      &:hover {
+        color: #1890ff;
+      }
+    }
+  }
+  
+  .nav-links {
+    flex: 0 0 auto; // No crece ni se encoge
+    display: flex;
+    gap: 16px; // Espacio entre enlaces
+    
+    a {
+      color: #fff !important;
+      
+      &:hover {
+        color: #1890ff !important;
+      }
+      
+      &.active {
+        color: #1890ff !important;
+        background-color: rgba(24, 144, 255, 0.1);
+      }
+    }
+  }
+}
