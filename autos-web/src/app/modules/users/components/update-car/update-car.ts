@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Users } from '../../services/users';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 
-// NG-Zorro imports
+// NG-Zorro imports necesarios para el template
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -15,11 +14,13 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+
 
 @Component({
   selector: 'app-update-car',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -31,76 +32,110 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzButtonModule,
     NzSelectModule,
     NzGridModule,
-    NzIconModule,
-    NzDatePickerModule
+    NzIconModule
   ],
   templateUrl: './update-car.html',
   styleUrls: ['./update-car.scss']
 })
-export class UpdateCar implements OnInit {
-  carId!: number;
-  imgChanged: boolean = false;
-  selectedFile: any;
-  existingImage: string | null = null;
-  imagePreview: string | ArrayBuffer | null = null;
+export class UpdateCarComponent {
 
   isSpinning = false;
-  validateForm!: FormGroup;
+  carId: number;
+  imgChanged = false;
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
+  existingImage: string | null = null;
 
-  listOfBrand = ['Toyota', 'Ford', 'BMW'];
-  listOfType = ['SUV', 'Sedan', 'Truck'];
-  listOfTransmission = ['Manual', 'Automatic'];
-  listOfColor = ['Red', 'Blue', 'Black'];
+  updateForm!: FormGroup;
+
+  listOfOption: Array<{ label: string; value: string }> = [];
+
+  listOfBrands: string[] = [
+    'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan',
+    'Hyundai', 'Kia', 'Mazda', 'Subaru', 'Volkswagen',
+    'BMW', 'Mercedes-Benz', 'Audi', 'Renault', 'Peugeot'
+  ];
+
+  listOfType: string[] = [
+    'Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible',
+    'Pickup', 'Van', 'Wagon', 'Crossover'
+  ];
+
+  listOfTransmission: string[] = [
+    'Manual', 'Automática', 'CVT', 'Semi-automática'
+  ];
+
+  listOfColor: string[] = [
+    'Blanco', 'Negro', 'Plata', 'Gris', 'Azul',
+    'Rojo', 'Verde', 'Amarillo', 'Naranja', 'Morado',
+    'Beige', 'Marrón', 'Dorado'
+  ];
+
 
   constructor(
     private userService: Users,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
-  ) { }
+    private fb: FormBuilder,
+    private message: NzMessageService,
+    private router: Router)
+  {
+    this.carId = Number(this.activatedRoute.snapshot.params['id']);
+  }
+  ngOnInit(): void {
+    this.updateForm = this.fb.group({
+      name: [null, Validators.required],
+      brand: [null, Validators.required],
+      type: [null, Validators.required],
+      color: [null, Validators.required],
+      transmission: [null, Validators.required],
+      price: [null, [Validators.required, Validators.min(1)]],
+      year: [null, [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]],
+      mileage: [null, [Validators.required, Validators.min(0)]],
+      description: [null]
+    });
 
-  ngOnInit() {
-    this.carId = this.activatedRoute.snapshot.params['id'];
-    this.buildForm();
     this.getCarById();
   }
 
-  buildForm() {
-    this.validateForm = this.fb.group({
-      brand: [null, Validators.required],
-      name: [null, Validators.required],
-      type: [null, Validators.required],
-      transmission: [null, Validators.required],
-      color: [null, Validators.required],
-      year: [null, Validators.required],
-      price: [null, Validators.required],
-      description: [null, Validators.required]
-    });
+  updateCar() {
+  this.isSpinning = true;
+  const formData: FormData = new FormData();
+  if(this.imgChanged && this.selectedFile){
+      formData.append('image', this.selectedFile);
+
   }
+  formData.append('brand', this.updateForm.get('brand')!.value);
+  formData.append('name', this.updateForm.get('name')!.value);
+  formData.append('type', this.updateForm.get('type')!.value);
+  formData.append('color', this.updateForm.get('color')!.value);
+  formData.append('year', this.updateForm.get('year')!.value);
+  formData.append('transmission', this.updateForm.get('transmission')!.value);
+  formData.append('description', this.updateForm.get('description')!.value);
+  formData.append('price', this.updateForm.get('price')!.value);
+
+
+  console.log(formData);
+
+  this.userService.updateCar(this.carId,formData).subscribe((res) => {
+    this.isSpinning = false;
+    this.message.success("Auto actualizado correctamente", { nzDuration: 5000 });
+    this.router.navigateByUrl("/user/dashboard");
+    console.log(res);
+  }, error => {
+    this.message.error("Error al actualizar el auto", { nzDuration: 5000 })
+  })
+}
 
   getCarById() {
     this.isSpinning = true;
     this.userService.getCarById(this.carId).subscribe((res) => {
       this.isSpinning = false;
-      console.log('Car data:', res);
-
       const carDto = res;
-      this.existingImage = 'data:image/jpeg;base64,' + carDto.returnedImage;
-
-      // Set form values
-      this.validateForm.patchValue({
-        brand: carDto.brand,
-        name: carDto.name,
-        type: carDto.type,
-        transmission: carDto.transmission,
-        color: carDto.color,
-        year: carDto.year,
-        price: carDto.price,
-        description: carDto.description
-      });
-    });
+      this.existingImage = 'data:image/jpeg;base64,' + res.returnedImage;
+      this.updateForm.patchValue(carDto);
+    })
   }
 
-  // para el (change)="onFileSelected($event)"
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
     this.imgChanged = true;
@@ -109,20 +144,14 @@ export class UpdateCar implements OnInit {
   }
 
   previewImage() {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
     if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-      };
       reader.readAsDataURL(this.selectedFile);
     }
   }
 
-  submitForm() {
-    if (this.validateForm.valid) {
-      console.log('Form values:', this.validateForm.value);
-    } else {
-      console.log('Form inválido');
-    }
-  }
+
 }

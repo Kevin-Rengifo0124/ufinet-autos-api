@@ -6,7 +6,7 @@
                     <h2 style="text-align: center;">Actualizar Auto</h2>
                 </div>
 
-                <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <form nz-form [formGroup]="updateForm" (ngSubmit)="updateCar()">
                     <div nz-row>
                         <div class="file-upload-container">
                             <label class="file-upload-label">
@@ -34,7 +34,7 @@
                             <nz-form-control nzHasFeedback [nzXs]="24" nzErrorTip="This Input Is Required!">
                                 <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Brand Name"
                                     formControlName="brand">
-                                    <nz-option *ngFor="let brand of listOfBrand;" nzLabel="{{ brand }}"
+                                    <nz-option *ngFor="let brand of listOfBrands;" nzLabel="{{ brand }}"
                                         nzValue="{{ brand }}"></nz-option>
                                 </nz-select>
                             </nz-form-control>
@@ -111,9 +111,8 @@
                         </nz-form-item>
                     </div>
 
-                    <!-- ✅ Botón ahora dentro -->
                     <div class="button-container">
-                        <button nz-button class="login-form-button" [nzType]="'primary'">
+                        <button nz-button class="login-form-button" [nzType]="'primary'" (click)="updateCar()">
                             Actualizar
                         </button>
                     </div>
