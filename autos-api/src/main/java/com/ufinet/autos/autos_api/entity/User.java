@@ -24,27 +24,18 @@ public class User implements UserDetails {
 
     private String password;
 
-    /**
-     * Spring Security necesita conocer las autoridades (roles/ permisos)
-     * que tiene el usuario. En este caso todos los usuarios registrados
-     * tendrán un único rol fijo: "ROLE_USER".
-     */
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    /**
-     * Usamos el campo email como nombre de usuario para el login.
-     */
+
     @Override
     public String getUsername() {
         return email;
     }
 
-    /**
-     * Estas propiedades indican si la cuenta está activa,
-     */
     @Override
     public boolean isAccountNonExpired() {
         return true;

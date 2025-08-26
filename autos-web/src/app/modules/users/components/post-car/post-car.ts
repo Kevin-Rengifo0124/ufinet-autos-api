@@ -197,7 +197,7 @@ export class PostCar {
         this.isSpinning = false;
         console.error('Error al publicar vehículo:', error);
         
-        // 🔍 DEBUG: Información detallada del error
+        //DEBUG: Información detallada del error
         console.log('🔍 === DETALLE DEL ERROR ===');
         console.log('Status:', error.status);
         console.log('StatusText:', error.statusText);

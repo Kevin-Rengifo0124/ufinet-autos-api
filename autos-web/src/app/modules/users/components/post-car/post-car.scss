@@ -1,4 +1,3 @@
-// Contenedor principal
 .parent {
   width: 100%;
   min-height: 100vh;
@@ -10,18 +9,16 @@
   padding: 20px;
 }
 
-// Tarjeta del formulario
 .child {
   padding: 40px;
   width: 100%;
-  max-width: 500px; // Ancho fijo más compacto
+  max-width: 500px; 
   background-color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   margin: 20px auto;
 }
 
-// Título
 .imgDiv {
   width: 100%;
   text-align: center;
@@ -40,7 +37,6 @@
   }
 }
 
-// Badge de imagen de perfil
 .profile-badge {
   display: flex;
   flex-direction: column;
@@ -113,11 +109,10 @@
   }
 }
 
-// Elementos del formulario
 nz-form-item {
   margin-bottom: 18px;
   width: 100%;
-  display: block; // Cambiar a block en vez de flex
+  display: block; 
 }
 
 nz-form-label {
@@ -127,7 +122,6 @@ nz-form-label {
   display: block;
   width: 100%;
   
-  // Manejar correctamente los asteriscos requeridos
   &[nzRequired] {
     &::before {
       display: inline-block;
@@ -175,7 +169,6 @@ nz-form-control {
     min-height: 80px;
   }
   
-  // Específico para select
   .ant-select {
     width: 100% !important;
     
@@ -194,7 +187,6 @@ nz-form-control {
     }
   }
   
-  // Específico para input-number
   .ant-input-number {
     width: 100% !important;
     height: 45px !important;
@@ -206,7 +198,6 @@ nz-form-control {
   }
 }
 
-// Contador de caracteres
 .character-counter {
   text-align: right;
   color: #8c8c8c;
@@ -215,12 +206,10 @@ nz-form-control {
   margin-bottom: 10px;
   padding-right: 2px;
   
-  // Asegurar que no se superponga con otros elementos
   position: relative;
   z-index: 1;
 }
 
-// Botones
 .login-form-button {
   height: 45px;
   font-size: 16px;
@@ -232,9 +221,8 @@ nz-form-control {
   margin-bottom: 16px;
 }
 
-// Contenedor de botones
 [nz-row][nzGutter] {
-  margin-top: 25px; // Reducir espacio para compensar la descripción más pequeña
+  margin-top: 25px; 
   
   [nz-col] {
     padding: 0 8px;
@@ -260,7 +248,6 @@ button[nz-button] {
     width: 100% !important;
   }
   
-  // Botón primario
   &[nzType="primary"] {
     background-color: #001529;
     border-color: #001529;
@@ -285,7 +272,6 @@ button[nz-button] {
     }
   }
   
-  // Botón secundario
   &:not([nzType="primary"]) {
     background-color: white;
     border-color: #d9d9d9;
@@ -303,19 +289,16 @@ button[nz-button] {
     }
   }
   
-  // Iconos en botones
   i[nz-icon] {
     margin-right: 8px;
   }
 }
 
-// Textarea
 textarea {
   min-height: 100px !important;
   resize: vertical;
 }
 
-// Responsive mejorado
 @media (max-width: 1200px) {
   .child {
     max-width: 550px;
@@ -409,7 +392,6 @@ textarea {
     font-size: 14px;
   }
   
-  // Botones responsivos en tablet
   [nz-row][nzGutter] {
     margin-top: 20px;
     
@@ -455,7 +437,6 @@ textarea {
     }
   }
   
-  // Campos más pequeños en móvil
   nz-form-control {
     input,
     textarea,
@@ -491,7 +472,6 @@ textarea {
     }
   }
   
-  // Botones apilados en móvil
   [nz-row][nzGutter] {
     margin-top: 20px;
     flex-direction: column;
@@ -513,13 +493,11 @@ textarea {
     }
   }
   
-  // Labels más pequeños en móvil
   nz-form-label {
     font-size: 14px;
     font-weight: 500;
   }
   
-  // Menor espaciado entre elementos
   nz-form-item {
     margin-bottom: 16px !important;
   }
@@ -557,7 +535,6 @@ textarea {
     }
   }
   
-  // Ajustes extra para pantallas muy pequeñas
   nz-form-control {
     input,
     textarea,
@@ -606,7 +583,6 @@ textarea {
   }
 }
 
-// Ajustes específicos para orientación landscape en móvil
 @media (max-height: 500px) and (orientation: landscape) {
   .parent {
     padding: 5px;
@@ -643,7 +619,6 @@ textarea {
   }
 }
 
-// Asegurar que todo esté centrado
 form[nz-form] {
   width: 100%;
   
@@ -653,22 +628,20 @@ form[nz-form] {
   
   .ant-col {
     width: 100%;
-    padding: 0 !important; // Remover padding extra de las columnas
+    padding: 0 !important; 
   }
 }
 
-// Estructura básica
 .ant-row {
   width: 100%;
-  margin: 0 !important; // Eliminar margen automático
+  margin: 0 !important; 
 }
 
 .ant-col {
   width: 100%;
-  padding: 0 !important; // Sin padding lateral
+  padding: 0 !important; 
 }
 
-// Mejorar el espaciado entre elementos
 .ant-form-item {
   margin-bottom: 18px !important;
   

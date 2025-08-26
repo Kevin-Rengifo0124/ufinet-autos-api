@@ -43,7 +43,7 @@ export class UsersDashboard implements OnInit {
     
     this.userService.getAllCars().subscribe({
       next: (res: any[]) => {
-        console.log('🚗 Respuesta getAllCars:', res);
+        console.log('Respuesta getAllCars:', res);
         
         if (res && Array.isArray(res)) {
           res.forEach((element: any) => {
@@ -51,7 +51,7 @@ export class UsersDashboard implements OnInit {
             
             // Verificar que el carro tiene ID
             if (!element.id) {
-              console.error('❌ Carro sin ID encontrado:', element);
+              console.error('Carro sin ID encontrado:', element);
               return;
             }
             
@@ -78,13 +78,13 @@ export class UsersDashboard implements OnInit {
             this.cars.push(element);
           });
           
-          console.log('✅ Carros procesados:', this.cars);
+          console.log('Carros procesados:', this.cars);
         } else {
-          console.error('❌ Respuesta no es un array:', res);
+          console.error('Respuesta no es un array:', res);
         }
       },
       error: (error) => {
-        console.error('❌ Error al cargar carros:', error);
+        console.error('Error al cargar carros:', error);
         this.message.error('Error al cargar los vehículos', { nzDuration: 5000 });
       }
     });
@@ -92,19 +92,19 @@ export class UsersDashboard implements OnInit {
 
   deleteCar(id: number) {
     if (!id) {
-      console.error('❌ ID de carro es undefined o null');
+      console.error('ID de carro es undefined o null');
       this.message.error('Error: ID de vehículo no válido', { nzDuration: 5000 });
       return;
     }
 
     this.userService.deleteCar(id).subscribe({
       next: (res) => {
-        console.log('✅ Carro eliminado:', res);
-        this.getAllCars(); // Recargar lista
+        console.log('Carro eliminado:', res);
+        this.getAllCars(); 
         this.message.success("Vehículo eliminado exitosamente", { nzDuration: 5000 });
       },
       error: (error) => {
-        console.error('❌ Error al eliminar carro:', error);
+        console.error('Error al eliminar carro:', error);
         this.message.error('Error al eliminar el vehículo', { nzDuration: 5000 });
       }
     });
@@ -117,7 +117,7 @@ export class UsersDashboard implements OnInit {
 
   // Método para manejar errores de carga de imagen
   onImageError(event: any) {
-    console.log('❌ Error cargando imagen, usando imagen por defecto');
+    console.log('Error cargando imagen, usando imagen por defecto');
     event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEzMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
   }
 }

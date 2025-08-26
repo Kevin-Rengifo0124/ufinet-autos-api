@@ -4,8 +4,6 @@ import com.ufinet.autos.autos_api.dto.CarDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
-
 @Entity
 @Data
 @Table(name = "cars")
@@ -33,6 +31,11 @@ public class Car {
 
     @Column(columnDefinition = "longblob")
     private byte[] image;
+
+    //Relación con User - cada auto pertenece a un usuario
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public CarDto getCarDto(){
         CarDto carDto = new CarDto();

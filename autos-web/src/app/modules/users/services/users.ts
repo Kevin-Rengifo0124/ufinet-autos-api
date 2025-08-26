@@ -15,11 +15,13 @@ export class Users {
   postCar(carData: FormData): Observable<any> {
     const headers = this.createAuthorizationHeader();
     const token = StorageService.getToken();
+    const user = StorageService.getUser();
 
     console.log('🔍 === SERVICIO USERS DEBUG ===');
     console.log('Token enviado:', token);
+    console.log('Usuario actual:', user);
     console.log('Headers:', headers.get('Authorization'));
-    console.log(' URL completa:', BASIC_URL + "/api/user/car");
+    console.log('URL completa:', BASIC_URL + "/api/user/car");
 
     console.log('FormData keys:');
     for (let key of carData.keys()) {
@@ -32,32 +34,42 @@ export class Users {
     }
 
     return this.http.post(BASIC_URL + "/api/user/car", carData, {
-      headers: headers
+      headers: headers,
+      responseType: 'text' as 'json' // Para manejar respuestas de texto
     });
   }
 
   getAllCars(): Observable<any> {
+    console.log('🔍 Obteniendo autos para usuario:', StorageService.getUser());
+    
     return this.http.get(BASIC_URL + "/api/user/cars", {
       headers: this.createAuthorizationHeader()
     });
   }
 
   deleteCar(id: number): Observable<any> {
+    console.log('🔍 Eliminando auto ID:', id, 'Usuario:', StorageService.getUser());
+    
     return this.http.delete(BASIC_URL + "/api/user/car/" + id, {
-      headers: this.createAuthorizationHeader()
+      headers: this.createAuthorizationHeader(),
+      responseType: 'text' as 'json' // Para manejar respuestas de texto
     });
-
   }
 
   getCarById(id: number): Observable<any> {
+    console.log('🔍 Obteniendo auto ID:', id, 'Usuario:', StorageService.getUser());
+    
     return this.http.get(BASIC_URL + "/api/user/car/" + id, {
       headers: this.createAuthorizationHeader()
     });
   }
 
   updateCar(carId: number, carDto: any): Observable<any> {
+    console.log('🔍 Actualizando auto ID:', carId, 'Usuario:', StorageService.getUser());
+    
     return this.http.put(BASIC_URL + "/api/user/car/" + carId, carDto, {
-      headers: this.createAuthorizationHeader()
+      headers: this.createAuthorizationHeader(),
+      responseType: 'text' as 'json' // Para manejar respuestas de texto
     });
   }
 
@@ -72,6 +84,4 @@ export class Users {
 
     return authHeaders.set('Authorization', 'Bearer ' + token);
   }
-
-
 }
