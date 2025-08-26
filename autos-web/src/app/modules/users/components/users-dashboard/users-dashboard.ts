@@ -10,6 +10,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Users } from '../../services/users';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-users-dashboard',
@@ -28,7 +29,7 @@ export class UsersDashboard implements OnInit {
 
   cars: any[] = []; 
 
-  constructor(private userService: Users) { }
+  constructor(private userService: Users, private message:NzMessageService) { }
 
   ngOnInit() {
     this.getAllCars();
@@ -41,6 +42,14 @@ export class UsersDashboard implements OnInit {
         element.proccessedImage = 'data:image/jpeg;base64,' + element.returnedImage.data;
         this.cars.push(element); 
       });
+    })
+  }
+
+  deleteCar(id: number){
+    this.userService.deleteCar(id).subscribe((res) => {
+      this.cars = [];
+      this.getAllCars();
+      this.message.success("Car deleted successfully", { nzDuration: 5000});
     })
   }
 

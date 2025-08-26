@@ -46,4 +46,10 @@ public class UserController {
         return ResponseEntity.ok(userServiceCar.getAllCars());
     }
 
+    @DeleteMapping("/car/{id}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id){
+        userServiceCar.deleteCar(id);
+        return ResponseEntity.ok(null);
+    }
+
 }

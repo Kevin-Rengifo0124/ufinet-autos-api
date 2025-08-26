@@ -11,4 +11,7 @@ public interface UserServiceCar {
 
     List<CarDto> getAllCars();
 
+    void deleteCar(Long id);
+
+
 }

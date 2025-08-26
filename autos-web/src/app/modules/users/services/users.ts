@@ -42,6 +42,13 @@ export class Users {
     });
   }
 
+  deleteCar(id: number): Observable<any> {
+    return this.http.delete(BASIC_URL + "/api/user/car/" + id, {
+      headers: this.createAuthorizationHeader()
+    });
+    
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     const token = StorageService.getToken();

@@ -41,5 +41,11 @@ public class UserServiceCarImpl implements UserServiceCar {
         return carRepository.findAll()
                 .stream()
                 .map(Car::getCarDto)
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteCar(Long id) {
+        carRepository.deleteById(id);
+    }
 }
