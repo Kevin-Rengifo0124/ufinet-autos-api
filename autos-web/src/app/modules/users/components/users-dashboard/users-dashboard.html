@@ -1,39 +1,75 @@
 <div style="background-color: #F8F8F8; min-height: 91vh;">
     <div style="padding-top: 10px;"></div>
 
-    <div style="margin-top:10px;" class="child" *ngFor="let car of cars">
+    <!-- Mensaje si no hay carros -->
+    <div *ngIf="cars.length === 0" style="text-align: center; padding: 50px;">
+        <h3>No hay vehículos registrados</h3>
+        <p>Agrega tu primer vehículo haciendo clic en "Agregar Auto" en el menú superior.</p>
+    </div>
+
+    <!-- Lista de carros -->
+    <div style="margin-top:10px;" class="child" *ngFor="let car of cars; trackBy: trackByCarId">
         <div nz-row>
             <!-- Columna Imagen -->
             <div nz-col nzSpan="8">
-                <img class="profile" style="height: 130px; width: 200px; border-radius: 10px;"
-                    [src]="car.proccessedImage" alt="profile" />
+                <img class="profile" 
+                     style="height: 130px; width: 200px; border-radius: 10px; object-fit: cover;"
+                     [src]="car.processedImage" 
+                     [alt]="car.brand + ' ' + car.name"
+                     (error)="onImageError($event)" />
             </div>
 
             <!-- Columna Información -->
             <div nz-col nzSpan="16">
-                <h2 style="cursor: pointer; color: #108ee9;">
+                <h2 style="cursor: pointer; color: #108ee9; margin-top: 0;">
                     {{car.brand}} - {{car.name}}
                 </h2>
-                <p>{{car.description}}</p>
+                <p style="margin-bottom: 10px;">{{car.description || 'Sin descripción'}}</p>
 
                 <hr />
-                <h5>
-                    Price : <b>${{car.price}}</b> -
-                    Color : <b>{{car.color}}</b> -
-                    Transmission : <b>{{car.transmission}}</b> -
-                    Type : <b>{{car.type}}</b> -
-                    Year : <b>{{car.year | date:'yyyy'}}</b>
+                <h5 style="margin: 10px 0;">
+                    Precio: <b>${{car.price | number}}</b> • 
+                    Color: <b>{{car.color}}</b> • 
+                    Transmisión: <b>{{car.transmission}}</b> • 
+                    Tipo: <b>{{car.type}}</b> • 
+                    Año: <b>{{car.year}}</b>
                 </h5>
                 <hr>
+                
+                <!-- Botones de acción con verificación de ID -->
                 <div style="float: right;">
-                    <button style="margin-left: 10px;" nzSize="small" nz-button nzType="primary"
-                        routerLink="/dashboard/car/{{car.id}}">
+                    <button 
+                        *ngIf="car.id" 
+                        style="margin-left: 10px;" 
+                        nzSize="small" 
+                        nz-button 
+                        nzType="primary"
+                        [routerLink]="['/dashboard/car', car.id]">
                         Actualizar
                     </button>
-                    <button style="margin-left: 10px;" nzSize="small" nz-button nzType="primary"
-                        (click)="deleteCar(car.id)" nzDanger>
+                    
+                    <button 
+                        *ngIf="car.id"
+                        style="margin-left: 10px;" 
+                        nzSize="small" 
+                        nz-button 
+                        nzType="primary"
+                        (click)="deleteCar(car.id)" 
+                        nzDanger>
                         Eliminar
                     </button>
+                    
+                    <!-- Mostrar error si no hay ID -->
+                    <span *ngIf="!car.id" style="color: red; font-size: 12px;">
+                        Error: ID no disponible
+                    </span>
+                </div>
+                
+                <!-- Debug info (remover en producción) -->
+                <div style="clear: both; font-size: 10px; color: #999; margin-top: 10px;" *ngIf="showDebugInfo">
+                    ID: {{car.id || 'UNDEFINED'}} | 
+                    HasImage: {{!!car.returnedImage}} | 
+                    ProcessedImage: {{!!car.processedImage}}
                 </div>
             </div>
         </div>
