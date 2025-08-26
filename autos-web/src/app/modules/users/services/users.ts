@@ -49,6 +49,12 @@ export class Users {
     
   }
 
+  getCarById(id: number): Observable<any> {
+    return this.http.get(BASIC_URL + "/api/user/car/" + id, {
+      headers: this.createAuthorizationHeader()
+    });
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     const token = StorageService.getToken();

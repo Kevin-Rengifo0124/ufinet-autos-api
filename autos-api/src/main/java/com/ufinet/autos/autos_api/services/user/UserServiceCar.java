@@ -13,5 +13,8 @@ public interface UserServiceCar {
 
     void deleteCar(Long id);
 
+    CarDto getCarById(Long id);
+
+
 
 }

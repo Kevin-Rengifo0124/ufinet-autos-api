@@ -52,4 +52,10 @@ public class UserController {
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping("/car/{id}")
+    public ResponseEntity<CarDto> getCarById(@PathVariable Long id){
+        CarDto carDto = userServiceCar.getCarById(id);
+        return ResponseEntity.ok(carDto);
+    }
+
 }

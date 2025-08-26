@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { StorageService } from '../../../../auth/services/auth/storage/storage.service';
+import { CommonModule } from '@angular/common';
+
 
 // NG-Zorro imports
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,6 +12,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Users } from '../../services/users';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AdminRoutingModule } from "../../../admin/admin-routing-module";
 
 @Component({
   selector: 'app-users-dashboard',
@@ -20,8 +22,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzTableModule,
     NzCardModule,
     NzIconModule,
-    NzSpinModule
-  ],
+    NzSpinModule,
+    AdminRoutingModule
+],
   templateUrl: './users-dashboard.html',
   styleUrl: './users-dashboard.scss'
 })
