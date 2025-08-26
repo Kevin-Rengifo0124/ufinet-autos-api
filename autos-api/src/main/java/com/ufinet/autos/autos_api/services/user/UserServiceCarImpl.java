@@ -56,4 +56,28 @@ public class UserServiceCarImpl implements UserServiceCar {
         return optionalCar.map(Car::getCarDto).orElse(null);
 
     }
+
+    @Override
+    public boolean updateCar(Long carId, CarDto carDto) throws IOException {
+        Optional<Car> optionalCar = carRepository.findById(carId);
+        if (optionalCar.isPresent()) {
+            Car existingCar = optionalCar.get();
+
+            if (carDto.getImage() != null)
+                existingCar.setImage(carDto.getImage().getBytes());
+            existingCar.setName(carDto.getName());
+            existingCar.setPrice(carDto.getPrice());
+            existingCar.setColor(carDto.getColor());
+            existingCar.setTransmission(carDto.getTransmission());
+            existingCar.setType(carDto.getType());
+            existingCar.setYear(carDto.getYear());
+            existingCar.setDescription(carDto.getDescription());
+            existingCar.setBrand(carDto.getBrand());
+            carRepository.save(existingCar);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

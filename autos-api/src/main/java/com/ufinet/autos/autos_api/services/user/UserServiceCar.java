@@ -15,6 +15,6 @@ public interface UserServiceCar {
 
     CarDto getCarById(Long id);
 
-
+    boolean updateCar(Long carId, CarDto carDto) throws IOException;
 
 }
