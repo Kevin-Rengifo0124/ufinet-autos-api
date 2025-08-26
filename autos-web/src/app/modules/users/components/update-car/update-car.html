@@ -3,12 +3,23 @@
         <div class="parent">
             <div class="child">
                 <div nz-row class="imgDiv">
-                    <h2 style="text-align: center;">Update Car</h2>
+                    <h2 style="text-align: center;">Actualizar Auto</h2>
                 </div>
 
                 <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
                     <div nz-row>
                         <div class="file-upload-container">
+                            <label class="file-upload-label">
+                                <span style="margin-left: 100px">Select a File</span>
+                                <input type="file" nz-button nzType="primary" accept="image/x-png,image/gif,image/jpeg"
+                                    (change)="onFileSelected($event)" />
+                            </label>
+
+                            <div *ngIf="imagePreview" class="image-preview">
+                                <div class="circle-image">
+                                    <img [src]="imagePreview" alt="Existing Image" class="preview-image" />
+                                </div>
+                            </div>
                             <div *ngIf="existingImage" class="image-preview">
                                 <div class="circle-image">
                                     <img [src]="existingImage" alt="Existing Image" class="preview-image" />
@@ -103,7 +114,7 @@
                     <!-- ✅ Botón ahora dentro -->
                     <div class="button-container">
                         <button nz-button class="login-form-button" [nzType]="'primary'">
-                            Update
+                            Actualizar
                         </button>
                     </div>
                 </form>

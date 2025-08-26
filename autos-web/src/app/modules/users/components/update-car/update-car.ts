@@ -22,7 +22,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,  
+    ReactiveFormsModule,
     FormsModule,
     NzSpinModule,
     NzFormModule,
@@ -39,16 +39,18 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 })
 export class UpdateCar implements OnInit {
   carId!: number;
+  imgChanged: boolean = false;
+  selectedFile: any;
   existingImage: string | null = null;
   imagePreview: string | ArrayBuffer | null = null;
 
-  isSpinning = false; 
-  validateForm!: FormGroup; 
+  isSpinning = false;
+  validateForm!: FormGroup;
 
-  listOfBrand = ['Toyota', 'Ford', 'BMW']; 
-  listOfType = ['SUV', 'Sedan', 'Truck']; 
-  listOfTransmission = ['Manual', 'Automatic']; 
-  listOfColor = ['Red', 'Blue', 'Black']; 
+  listOfBrand = ['Toyota', 'Ford', 'BMW'];
+  listOfType = ['SUV', 'Sedan', 'Truck'];
+  listOfTransmission = ['Manual', 'Automatic'];
+  listOfColor = ['Red', 'Blue', 'Black'];
 
   constructor(
     private userService: Users,
@@ -100,13 +102,19 @@ export class UpdateCar implements OnInit {
 
   // para el (change)="onFileSelected($event)"
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
+    this.selectedFile = event.target.files[0];
+    this.imgChanged = true;
+    this.existingImage = null;
+    this.previewImage();
+  }
+
+  previewImage() {
+    if (this.selectedFile) {
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(this.selectedFile);
     }
   }
 
